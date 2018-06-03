@@ -1,6 +1,6 @@
 # Football-Club-Rest-Api
 
-*Spring Boot *Spring MVC *Spring Data *Swagger
+*Spring Boot *Spring MVC *Spring Data *Spring HATEOAS *Swagger
 
 Football club:
 
