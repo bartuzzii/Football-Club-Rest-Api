@@ -2,6 +2,7 @@ package org.bj.footballclubrestapi.controllers;
 
 import org.bj.footballclubrestapi.model.ClubNotFoundException;
 import org.bj.footballclubrestapi.model.FootballClub;
+import org.bj.footballclubrestapi.model.Player;
 import org.bj.footballclubrestapi.repositories.FootballClubRepository;
 import org.bj.footballclubrestapi.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -49,22 +50,55 @@ public class FootballClubResources {
     }
 
     @GetMapping("/{id}")
-    public Resource<FootballClub> findById(@PathVariable int id) {
+    public Resource<FootballClub> findClubById(@PathVariable int id) {
         Optional<FootballClub> footballClub = footballClubRepository.findById(id);
         if (!footballClub.isPresent())
-            throw new ClubNotFoundException("id-" + id);
+            throw new ClubNotFoundException("Club not found id: " + id);
 
         //HATEOAS
         Resource<FootballClub> resource = new Resource<>(footballClub.get());
         ControllerLinkBuilder linkTo = linkTo(methodOn(this.getClass()).getAll());
-        resource.add(linkTo.withRel("all-users"));
+        resource.add(linkTo.withRel("all-football-clubs"));
         return resource;
     }
 
     @DeleteMapping("/{id}")
-    public void deleteById(@PathVariable int id) {
+    public void deleteClubById(@PathVariable int id) {
         footballClubRepository.deleteById(id);
     }
+
+    //players
+
+    @GetMapping("/{id}/players")
+    public List<Player> getAllPlayers(@PathVariable int id) {
+        Optional<FootballClub> footballClub = footballClubRepository.findById(id);
+        if (!footballClub.isPresent()) {
+            throw new ClubNotFoundException("Club not found id: " + id);
+        }
+        return footballClub.get().getPlayers();
+    }
+
+    @PostMapping("/{id}/players")
+    public ResponseEntity<Object> addPlayer(@PathVariable int id, @RequestBody Player player) {
+        Optional<FootballClub> optionalFb = footballClubRepository.findById(id);
+        if (!optionalFb.isPresent()) {
+            throw new ClubNotFoundException("Club not found id: " + id);
+        }
+        FootballClub footballClub=optionalFb.get();
+
+        // map player->football club
+        player.setFootballClub(footballClub);
+        playerRepository.save(player);
+
+
+        URI location = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(player.getId())
+                .toUri();
+        return ResponseEntity.created(location).build();
+    }
+
 
 
 

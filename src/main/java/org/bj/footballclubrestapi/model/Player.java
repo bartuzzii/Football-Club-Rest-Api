@@ -12,7 +12,7 @@ import javax.persistence.*;
 @Entity
 public class Player {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
     String name;
