@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @ToString
@@ -15,8 +16,13 @@ public class FootballClub {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @Size(min = 2)
     String name;
+
+    @Size(min = 2)
     String league;
+
+    @Size(min = 2)
     String coach;
 
     @OneToMany(mappedBy = "footballClub")

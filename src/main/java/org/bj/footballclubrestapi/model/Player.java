@@ -5,6 +5,9 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
 import javax.persistence.*;
+import javax.validation.constraints.Max;
+import javax.validation.constraints.Min;
+import javax.validation.constraints.Size;
 
 @ToString(exclude ="footballClub")
 @Getter @Setter
@@ -15,8 +18,13 @@ public class Player {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
 
+    @Size(min = 2)
     String name;
+
+    @Min(value = 1) @Max(value = 99)
     int shirtNumber;
+
+    @Size(min = 2)
     String position;
 
     @ManyToOne(fetch = FetchType.LAZY)

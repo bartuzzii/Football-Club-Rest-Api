@@ -11,6 +11,8 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
@@ -37,7 +39,7 @@ public class FootballClubResources {
     }
 
     @PostMapping
-    public ResponseEntity<FootballClub> addClub(@RequestBody FootballClub footballClub){
+    public ResponseEntity<FootballClub> addClub(@Valid @RequestBody FootballClub footballClub){
         FootballClub savedFootballClub= footballClubRepository.save(footballClub);
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -77,7 +79,7 @@ public class FootballClubResources {
     }
 
     @PostMapping("/{id}/players")
-    public ResponseEntity<Object> addPlayer(@PathVariable int id, @RequestBody Player player) {
+    public ResponseEntity<Object> addPlayer(@Valid @PathVariable int id, @RequestBody Player player) {
         Optional<FootballClub> optionalFb = footballClubRepository.findById(id);
         if (!optionalFb.isPresent()) {
             throw new ClubNotFoundException("Club not found id: " + id);
