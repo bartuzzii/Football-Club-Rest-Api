@@ -11,7 +11,6 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -23,6 +22,7 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RestController
 @RequestMapping("fbclubs")
 public class FootballClubResources {
+
     private FootballClubRepository footballClubRepository;
     private PlayerRepository playerRepository;
 
@@ -64,6 +64,10 @@ public class FootballClubResources {
 
     @DeleteMapping("/{id}")
     public void deleteClubById(@PathVariable int id) {
+        Optional<FootballClub> footballClub = footballClubRepository.findById(id);
+        if (!footballClub.isPresent()) {
+            throw new ClubNotFoundException("Club not found id: " + id);
+        }
         footballClubRepository.deleteById(id);
     }
 
