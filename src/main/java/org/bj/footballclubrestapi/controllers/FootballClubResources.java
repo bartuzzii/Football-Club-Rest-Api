@@ -11,11 +11,9 @@ import org.springframework.hateoas.mvc.ControllerLinkBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
-
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
-
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
@@ -90,7 +88,6 @@ public class FootballClubResources {
         player.setFootballClub(footballClub);
         playerRepository.save(player);
 
-
         URI location = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -99,7 +96,22 @@ public class FootballClubResources {
         return ResponseEntity.created(location).build();
     }
 
-
+    @GetMapping("/{id}/players/{idp}")
+    public Resource<Player> findPlayerById(@PathVariable int id, @PathVariable int idp) {
+        Optional<FootballClub> footballClub = footballClubRepository.findById(id);
+        if (!footballClub.isPresent()) {
+            throw new ClubNotFoundException("Club not found id: " + id);
+        }
+        Optional<Player> player=playerRepository.findById(idp);
+        if (!player.isPresent()) {
+            throw new ClubNotFoundException("Player not found");
+        }
+        //HATEOAS
+        Resource<Player> resource = new Resource<>(player.get());
+        ControllerLinkBuilder linkTo = linkTo(FootballClubResources.class);
+        resource.add(linkTo.withRel("all-football-clubs"));
+        return resource;
+    }
 
 
 }

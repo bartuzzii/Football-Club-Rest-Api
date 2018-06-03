@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
-
 import javax.persistence.*;
 
 @ToString(exclude ="footballClub")
 @Getter @Setter
 @Entity
 public class Player {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     Integer id;
@@ -18,6 +18,7 @@ public class Player {
     String name;
     int shirtNumber;
     String position;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
     FootballClub footballClub;
