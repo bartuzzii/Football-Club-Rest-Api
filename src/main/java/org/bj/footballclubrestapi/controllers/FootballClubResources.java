@@ -1,8 +1,8 @@
 package org.bj.footballclubrestapi.controllers;
 
-import org.bj.footballclubrestapi.model.ClubNotFoundException;
-import org.bj.footballclubrestapi.model.FootballClub;
-import org.bj.footballclubrestapi.model.Player;
+import org.bj.footballclubrestapi.models.ClubNotFoundException;
+import org.bj.footballclubrestapi.models.FootballClub;
+import org.bj.footballclubrestapi.models.Player;
 import org.bj.footballclubrestapi.repositories.FootballClubRepository;
 import org.bj.footballclubrestapi.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;

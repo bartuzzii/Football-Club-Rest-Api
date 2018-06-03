@@ -1,4 +1,4 @@
-package org.bj.footballclubrestapi.model;
+package org.bj.footballclubrestapi.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
