@@ -5,7 +5,7 @@
 Football club:
 
 
-download a list of movies -> GET /fbclubs
+download a list of football clubs-> GET /fbclubs
 
 add a football club -> POST /fbclubs
 
