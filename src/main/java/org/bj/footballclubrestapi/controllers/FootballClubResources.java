@@ -51,9 +51,8 @@ public class FootballClubResources {
 
     @GetMapping("/{id}")
     public Resource<FootballClub> findClubById(@PathVariable int id) {
+        validateClubId(id);
         Optional<FootballClub> footballClub = footballClubRepository.findById(id);
-        if (!footballClub.isPresent())
-            throw new ClubNotFoundException("Club not found id: " + id);
 
         //HATEOAS
         Resource<FootballClub> resource = new Resource<>(footballClub.get());
@@ -64,10 +63,7 @@ public class FootballClubResources {
 
     @DeleteMapping("/{id}")
     public void deleteClubById(@PathVariable int id) {
-        Optional<FootballClub> footballClub = footballClubRepository.findById(id);
-        if (!footballClub.isPresent()) {
-            throw new ClubNotFoundException("Club not found id: " + id);
-        }
+        validateClubId(id);
         footballClubRepository.deleteById(id);
     }
 
@@ -75,19 +71,15 @@ public class FootballClubResources {
 
     @GetMapping("/{id}/players")
     public List<Player> getAllPlayers(@PathVariable int id) {
+        validateClubId(id);
         Optional<FootballClub> footballClub = footballClubRepository.findById(id);
-        if (!footballClub.isPresent()) {
-            throw new ClubNotFoundException("Club not found id: " + id);
-        }
         return footballClub.get().getPlayers();
     }
 
     @PostMapping("/{id}/players")
     public ResponseEntity<Object> addPlayer(@Valid @PathVariable int id, @RequestBody Player player) {
+        validateClubId(id);
         Optional<FootballClub> optionalFb = footballClubRepository.findById(id);
-        if (!optionalFb.isPresent()) {
-            throw new ClubNotFoundException("Club not found id: " + id);
-        }
         FootballClub footballClub=optionalFb.get();
 
         // map player->football club
@@ -104,10 +96,7 @@ public class FootballClubResources {
 
     @GetMapping("/{id}/players/{idp}")
     public Resource<Player> findPlayerById(@PathVariable int id, @PathVariable int idp) {
-        Optional<FootballClub> footballClub = footballClubRepository.findById(id);
-        if (!footballClub.isPresent()) {
-            throw new ClubNotFoundException("Club not found id: " + id);
-        }
+        validateClubId(id);
         Optional<Player> player=playerRepository.findById(idp);
         if (!player.isPresent()) {
             throw new ClubNotFoundException("Player not found");
@@ -119,5 +108,11 @@ public class FootballClubResources {
         return resource;
     }
 
+
+    private void validateClubId(int id){
+        this.footballClubRepository
+                .findById(id)
+                .orElseThrow(()-> new ClubNotFoundException("Club not found id: "+id));
+    }
 
 }
