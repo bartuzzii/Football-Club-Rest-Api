@@ -9,7 +9,7 @@
 * Swagger
 
 ### Football club:
-* download a list of football clubs-> GET /fbclubs
+* download a list of football clubs -> GET /fbclubs
 * add a football club -> POST /fbclubs
 * delete a football club -> DELETE /fbclubs
 * download details of the selected football club -> GET /fbclubs/id
