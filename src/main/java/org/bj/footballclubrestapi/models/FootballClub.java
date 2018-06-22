@@ -14,19 +14,19 @@ public class FootballClub {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
     @Size(min = 2)
-    String name;
+    private String name;
 
     @Size(min = 2)
-    String league;
+    private String league;
 
     @Size(min = 2)
-    String coach;
+    private String coach;
 
     @OneToMany(mappedBy = "footballClub")
-    List<Player> players;
+    private List<Player> players;
 
     public FootballClub(Integer id, String name, String coach) {
         this.id = id;

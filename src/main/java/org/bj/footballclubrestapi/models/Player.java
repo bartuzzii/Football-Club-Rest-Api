@@ -16,20 +16,20 @@ public class Player {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    Integer id;
+    private Integer id;
 
     @Size(min = 2)
-    String name;
+    private String name;
 
     @Min(value = 1) @Max(value = 99)
-    int shirtNumber;
+    private int shirtNumber;
 
     @Size(min = 2)
-    String position;
+    private String position;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonIgnore
-    FootballClub footballClub;
+    private FootballClub footballClub;
 
     public Player(Integer id,String name, int shirtNumber, String position) {
         this.id = id;
