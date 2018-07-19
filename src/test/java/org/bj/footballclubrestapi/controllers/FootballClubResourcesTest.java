@@ -147,4 +147,11 @@ public class FootballClubResourcesTest {
 
         verify(playerRepository,times(1)).findById(1);
     }
+
+    @Test(expected = Exception.class)
+    public void testClubNotFound() throws Exception {
+        when(footballClubRepository.findById(12)).thenReturn(null);
+        mockMvc.perform(get("/fbclubs/{id}", 12))
+                .andExpect(status().isNotFound());
+    }
 }
