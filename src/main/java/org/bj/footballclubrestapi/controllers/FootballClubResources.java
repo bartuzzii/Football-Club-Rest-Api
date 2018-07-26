@@ -23,8 +23,8 @@ import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 @RequestMapping("fbclubs")
 public class FootballClubResources {
 
-    private FootballClubRepository footballClubRepository;
-    private PlayerRepository playerRepository;
+    private final FootballClubRepository footballClubRepository;
+    private final PlayerRepository playerRepository;
 
     @Autowired
     public FootballClubResources(FootballClubRepository footballClubRepository, PlayerRepository playerRepository) {
