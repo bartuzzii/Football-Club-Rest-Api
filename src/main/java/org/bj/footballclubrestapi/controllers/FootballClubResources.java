@@ -1,6 +1,6 @@
 package org.bj.footballclubrestapi.controllers;
 
-import org.bj.footballclubrestapi.models.ClubNotFoundException;
+import org.bj.footballclubrestapi.models.NotFoundException;
 import org.bj.footballclubrestapi.models.FootballClub;
 import org.bj.footballclubrestapi.models.Player;
 import org.bj.footballclubrestapi.repositories.FootballClubRepository;
@@ -99,7 +99,7 @@ public class FootballClubResources {
         validateClubId(id);
         Optional<Player> player=playerRepository.findById(idp);
         if (!player.isPresent()) {
-            throw new ClubNotFoundException("Player not found");
+            throw new NotFoundException("Player not found");
         }
         //HATEOAS
         Resource<Player> resource = new Resource<>(player.get());
@@ -112,7 +112,7 @@ public class FootballClubResources {
     private void validateClubId(int id){
         this.footballClubRepository
                 .findById(id)
-                .orElseThrow(()-> new ClubNotFoundException("Club not found id: "+id));
+                .orElseThrow(()-> new NotFoundException("Club not found id: "+id));
     }
 
 }
