@@ -12,6 +12,7 @@
 * download a list of football clubs -> **GET** /fbclubs
 * add a football club -> **POST** /fbclubs
 * delete a football club -> **DELETE** /fbclubs/id
+* update a football club -> **PUT** /fbclubs/id
 * download details of the selected football club -> **GET** /fbclubs/id
 
 
