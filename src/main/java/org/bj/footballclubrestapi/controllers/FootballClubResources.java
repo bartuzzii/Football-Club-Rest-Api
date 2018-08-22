@@ -1,25 +1,30 @@
 package org.bj.footballclubrestapi.controllers;
 
-import org.bj.footballclubrestapi.models.NotFoundException;
+import lombok.extern.slf4j.Slf4j;
 import org.bj.footballclubrestapi.models.FootballClub;
+import org.bj.footballclubrestapi.models.NotFoundException;
 import org.bj.footballclubrestapi.models.Player;
 import org.bj.footballclubrestapi.repositories.FootballClubRepository;
 import org.bj.footballclubrestapi.repositories.PlayerRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.hateoas.Resource;
 import org.springframework.hateoas.mvc.ControllerLinkBuilder;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import java.util.Optional;
+
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.linkTo;
 import static org.springframework.hateoas.mvc.ControllerLinkBuilder.methodOn;
 
 
 @RestController
+@Slf4j
 @RequestMapping("fbclubs")
 public class FootballClubResources {
 
@@ -50,7 +55,7 @@ public class FootballClubResources {
     }
 
     @GetMapping("/{id}")
-    public Resource<FootballClub> findClubById(@PathVariable int id) {
+    public Resource<FootballClub> findClubById(@PathVariable Integer id) {
         validateClubId(id);
         Optional<FootballClub> footballClub = footballClubRepository.findById(id);
 
@@ -62,7 +67,7 @@ public class FootballClubResources {
     }
 
     @DeleteMapping("/{id}")
-    public void deleteClubById(@PathVariable int id) {
+    public void deleteClubById(@PathVariable Integer id) {
         validateClubId(id);
         footballClubRepository.deleteById(id);
     }
@@ -70,14 +75,14 @@ public class FootballClubResources {
     //players
 
     @GetMapping("/{id}/players")
-    public List<Player> getAllPlayers(@PathVariable int id) {
+    public List<Player> getAllPlayers(@PathVariable Integer id) {
         validateClubId(id);
         Optional<FootballClub> footballClub = footballClubRepository.findById(id);
         return footballClub.get().getPlayers();
     }
 
     @PostMapping("/{id}/players")
-    public ResponseEntity<Object> addPlayer(@Valid @PathVariable int id, @RequestBody Player player) {
+    public ResponseEntity<Object> addPlayer(@Valid @PathVariable Integer id, @RequestBody Player player) {
         validateClubId(id);
         Optional<FootballClub> optionalFb = footballClubRepository.findById(id);
         FootballClub footballClub=optionalFb.get();
@@ -95,7 +100,7 @@ public class FootballClubResources {
     }
 
     @GetMapping("/{id}/players/{idp}")
-    public Resource<Player> findPlayerById(@PathVariable int id, @PathVariable int idp) {
+    public Resource<Player> findPlayerById(@PathVariable Integer id, @PathVariable Integer idp) {
         validateClubId(id);
         Optional<Player> player=playerRepository.findById(idp);
         if (!player.isPresent()) {
@@ -106,6 +111,24 @@ public class FootballClubResources {
         ControllerLinkBuilder linkTo = linkTo(FootballClubResources.class);
         resource.add(linkTo.withRel("all-football-clubs"));
         return resource;
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<FootballClub> updateClub(@PathVariable Integer id, @RequestBody FootballClub footballClub){
+        validateClubId(id);
+        log.debug("Updating... football club id: "+id);
+        Optional <FootballClub> optionalFootballClub = footballClubRepository.findById(id);
+        FootballClub currentClub= optionalFootballClub.get();
+        currentClub.setCoach(footballClub.getCoach());
+        currentClub.setLeague(footballClub.getLeague());
+        currentClub.setName(footballClub.getName());
+        footballClubRepository.save(currentClub);
+        return new ResponseEntity<>(currentClub, HttpStatus.OK);
+
+
+
+
+
     }
 
 
