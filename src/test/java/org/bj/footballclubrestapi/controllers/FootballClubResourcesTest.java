@@ -14,21 +14,16 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
-import static org.hamcrest.core.Is.is;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import static org.hamcrest.collection.IsCollectionWithSize.hasSize;
+import static org.hamcrest.core.Is.is;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.times;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
-
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
+import static org.mockito.Mockito.*;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 public class FootballClubResourcesTest {
@@ -147,6 +142,27 @@ public class FootballClubResourcesTest {
 
         verify(playerRepository,times(1)).findById(1);
     }
+
+    @Test
+    public void updateClub() throws Exception {
+
+        FootballClub footballClub = new FootballClub(1,"Chelsea","Kowalski");
+        FootballClub updateClub = new FootballClub(footballClub.getId(),footballClub.getName(),footballClub.getCoach());
+
+        when(footballClubRepository.findById(1)).thenReturn(Optional.of(footballClub));
+        when(footballClubRepository.save(any(FootballClub.class))).thenReturn(updateClub);
+        mockMvc.perform(put("/fbclubs/1")
+                .contentType(MediaType.APPLICATION_JSON_VALUE)
+                .accept(MediaType.APPLICATION_JSON)
+                .content(asJsonString(footballClub)))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.id", is(1)))
+                .andExpect(jsonPath("$.name", is("Chelsea")))
+                .andExpect(jsonPath("$.coach", is("Kowalski")));
+
+    }
+
+
 
     @Test(expected = Exception.class)
     public void testClubNotFound() throws Exception {
