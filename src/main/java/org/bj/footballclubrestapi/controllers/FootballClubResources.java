@@ -14,6 +14,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.transaction.Transactional;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -113,6 +114,7 @@ public class FootballClubResources {
         return resource;
     }
 
+    @Transactional
     @PutMapping("/{id}")
     public ResponseEntity<FootballClub> updateClub(@PathVariable Integer id, @RequestBody FootballClub footballClub){
         validateClubId(id);
@@ -122,7 +124,7 @@ public class FootballClubResources {
         currentClub.setCoach(footballClub.getCoach());
         currentClub.setLeague(footballClub.getLeague());
         currentClub.setName(footballClub.getName());
-        footballClubRepository.save(currentClub);
+      //  footballClubRepository.save(currentClub); @Transactional zbedne- dirty checking
         return new ResponseEntity<>(currentClub, HttpStatus.OK);
 
 
